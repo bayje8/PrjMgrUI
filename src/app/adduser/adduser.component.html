@@ -1,0 +1,69 @@
+<div class="container" style="margin-top:30px">
+  <form name="add user" [formGroup]="addUserForm" (ngSubmit)="onSubmit()">
+    <div>
+      <label for="ifirstname">First Name:</label>
+      <input type="text" class="form-control" id="ifirstname" formControlName="ifirstname">
+    </div>
+    <div>
+      <label for="ilastname">Last Name:</label>
+      <input type="text" class="form-control" id="ilastname" formControlName="ilastname">
+    </div>
+    <div>
+      <label for="iemployeeid">Employee ID:</label>
+      <input type="text" class="form-control" id="iemployeeid" formControlName="iemployeeid">
+    </div>
+    <br>
+    <div class="row">
+      <div class="col-sm-6" style="left:0">
+        <button type="submit" class="btn btn-primary btn-block" id="btn-add-task">Add</button>
+      </div>
+      <div class="col-sm-6">
+        <button type="button" class="btn btn-primary btn-block" id="btn-reset" (click)="reset()">Reset</button>
+      </div>
+    </div>
+  </form>
+  <hr style="border-top: solid 1px;" />
+  <div class="row">
+    <div class="col-sm-5">
+      <input type="text" [(ngModel)]="searchStr">
+    </div>
+    <div class="col-sm-1 justify-content-left align-self-left">
+      <h5>Sort:</h5>
+    </div>
+    <div class="col-sm-2">
+      <button type="button" class="btn btn-block btn-outline-success">First Name</button>
+    </div>
+    <div class="col-sm-2">
+      <button type="button" class="btn btn-block btn-outline-success">Last Name</button>
+    </div>
+    <div class="col-sm-2">
+      <button type="button" class="btn btn-block btn-outline-success">Employee ID</button>
+    </div>
+  </div>
+  <hr style="border-top: dotted 1px;" />
+  <div *ngFor="let u of users">
+    <div class="row">
+      <div class="col-sm-3">
+        <label for="firstname">First Name</label>
+        <h6 id="firstname">{{u.firstName}}</h6>
+      </div>
+      <div class="col-sm-3">
+        <label for="lastname">Last Name</label>
+        <h6 id="lastname">{{u.lastName}}</h6>
+      </div>
+      <div class="col-sm-2">
+        <label for="employeeid">Employee ID</label>
+        <h6 id="employeeid">{{u.employeeId}}</h6>
+      </div>
+      <div class="col-sm-2">
+        <button type="button" class="btn btn-secondary btn-block" (click)='updateTask(u)'>Edit
+        </button>
+      </div>
+      <div class="col-sm-2">
+        <button type="button" class="btn btn-secondary btn-block" (click)="deleteTask(u.userId)">Delete
+        </button>
+      </div>
+    </div>
+    <hr style="border-top: dotted 1px;" />
+  </div>
+</div>
