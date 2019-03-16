@@ -14,6 +14,8 @@ export class AdduserComponent implements OnInit {
   aUser = new user();
   searchStr: String = "search...";
   users: Array<user> = [];
+  addflag: boolean = true;
+  updatingUser = new user();
 
   constructor(private taskService: TaskserviceService, private route: ActivatedRoute, private router: Router) {
     this.initform();
@@ -32,6 +34,19 @@ export class AdduserComponent implements OnInit {
   }
 
   onSubmit() {
+    if (this.addflag) {
+      this.addUser();
+    } else {
+      this.updateUser();
+    }
+  }
+
+  reset() {
+    this.addflag = true;
+    this.initform();
+  }
+
+  addUser() {
     console.log("Add User Form submitted!")
     console.log(this.addUserForm.get("ifirstname").value)
     this.aUser.firstName = this.addUserForm.get("ifirstname").value
@@ -40,21 +55,39 @@ export class AdduserComponent implements OnInit {
     console.log(this.aUser);
     this.taskService.addUser(this.aUser).subscribe((data) => {
       console.log("Added user");
+      window.location.reload();
     }, (err) => {
       console.log(err);
     });
   }
 
-  reset() {
-    this.initform();
+  updateUser() {
+    this.updatingUser.firstName = this.addUserForm.get("ifirstname").value
+    this.updatingUser.lastName = this.addUserForm.get("ilastname").value
+    this.updatingUser.employeeId = this.addUserForm.get("iemployeeid").value
+    this.taskService.updateUser(this.updatingUser).subscribe((data) => {
+      console.log("Updated User" + data);
+      this.initform();
+    }, (err) => {
+      console.log(err);
+    });
   }
 
-  updateTask() {
-
+  switchToUpdate(u: user) {
+    this.updatingUser = u;
+    this.addflag = false;
+    this.addUserForm.get("ifirstname").setValue(this.updatingUser.firstName);
+    this.addUserForm.get("ilastname").setValue(this.updatingUser.lastName);
+    this.addUserForm.get("iemployeeid").setValue(this.updatingUser.employeeId);
   }
 
-  deleteTask() {
-
+  deleteUser(userId: number) {
+    this.taskService.deleteUser(userId).subscribe(() => {
+      console.log("Deleted the user");
+      window.location.reload();
+    }, (err) => {
+      console.log(err);
+    });
   }
 
   getUsers() {

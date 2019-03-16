@@ -15,7 +15,8 @@
     <br>
     <div class="row">
       <div class="col-sm-6" style="left:0">
-        <button type="submit" class="btn btn-primary btn-block" id="btn-add-task">Add</button>
+        <button *ngIf="addflag" type="submit" class="btn btn-primary btn-block" id="btn-add-task">Add</button>
+        <button *ngIf="!addflag" type="submit" class="btn btn-primary btn-block" id="btn-add-task">Update</button>
       </div>
       <div class="col-sm-6">
         <button type="button" class="btn btn-primary btn-block" id="btn-reset" (click)="reset()">Reset</button>
@@ -56,11 +57,11 @@
         <h6 id="employeeid">{{u.employeeId}}</h6>
       </div>
       <div class="col-sm-2">
-        <button type="button" class="btn btn-secondary btn-block" (click)='updateTask(u)'>Edit
+        <button type="button" class="btn btn-secondary btn-block" (click)='switchToUpdate(u)'>Edit
         </button>
       </div>
       <div class="col-sm-2">
-        <button type="button" class="btn btn-secondary btn-block" (click)="deleteTask(u.userId)">Delete
+        <button type="button" class="btn btn-secondary btn-block" (click)="deleteUser(u.userId)">Delete
         </button>
       </div>
     </div>

@@ -55,19 +55,19 @@ export class TaskserviceService {
 
   //-------------User Services--------------------------//
 
-  addUser(aUser: user):Observable<any> {
+  addUser(aUser: user): Observable<any> {
     return this.http.post<any>(endpoint + 'users', JSON.stringify(aUser), httpOptions).pipe(tap((user) => console.log('added user id=${user.user_id}')), catchError(this.handleError<any>('addUser')));
   }
 
-  updateUser() {
-
+  updateUser(aUser: user): Observable<any> {
+    return this.http.put<any>(endpoint + 'users', JSON.stringify(aUser), httpOptions).pipe(tap((user) => console.log('updated user id=${user.user_id}')), catchError(this.handleError<any>('updateUser')));
   }
 
-  deleteUser() {
-
+  deleteUser(userId: number) {
+    return this.http.delete(endpoint + 'users/' + userId);
   }
 
-  getUsers():Observable<any>{
+  getUsers(): Observable<any> {
     return this.http.get(endpoint + "users").pipe(map(this.extractData));
   }
 
