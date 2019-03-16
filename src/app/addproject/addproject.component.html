@@ -47,7 +47,7 @@
   </form>
   <hr style="border-top: solid 1px;" />
   <div class="row">
-    <div class="col-sm-5">
+    <div class="col-sm-3">
       <label>Search:</label>&nbsp;&nbsp;
       <input type="text" [(ngModel)]="searchStr">
     </div>
@@ -55,36 +55,53 @@
       <label>Sort By:</label>
     </div>
     <div class="col-sm-2">
-      <button type="button" class="btn btn-block btn-outline-success" (click)="sortByFirstName()">First Name</button>
+        <button type="button" class="btn btn-block btn-outline-success" (click)="sortByStartDate()">Start Date</button>
+      </div>
+    <div class="col-sm-2">
+      <button type="button" class="btn btn-block btn-outline-success" (click)="sortByEndDate()">End Date</button>
     </div>
     <div class="col-sm-2">
-      <button type="button" class="btn btn-block btn-outline-success" (click)="sortByLastName()">Last Name</button>
+      <button type="button" class="btn btn-block btn-outline-success" (click)="sortByPriority()">Priority</button>
     </div>
     <div class="col-sm-2">
-      <button type="button" class="btn btn-block btn-outline-success" (click)="sortByEmployeeId()">Employee ID</button>
+      <button type="button" class="btn btn-block btn-outline-success" (click)="sortByCompleted()">Completed</button>
     </div>
   </div>
   <hr style="border-top: dotted 1px;" />
-  <div *ngFor="let u of users | filterUser:searchStr">
+  <div *ngFor="let p of projects">
     <div class="row">
       <div class="col-sm-3">
-        <label for="firstname">First Name</label>
-        <h6 id="firstname">{{u.firstName}}</h6>
+        <label for="project">Project:</label>
+        <h6 id="project">{{p.project}}</h6>
       </div>
       <div class="col-sm-3">
-        <label for="lastname">Last Name</label>
-        <h6 id="lastname">{{u.lastName}}</h6>
+        <label for="noofTasks">No of Tasks:</label>
+        <h6 id="noofTasks">{{p.noOfTasks}}</h6>
       </div>
-      <div class="col-sm-2">
-        <label for="employeeid">Employee ID</label>
-        <h6 id="employeeid">{{u.employeeId}}</h6>
+      <div class="col-sm-3">
+        <label for="startDate">Start Date:</label>
+          <h6 id="startDate">{{p.startDate}}</h6>
       </div>
-      <div class="col-sm-2">
-        <button type="button" class="btn btn-secondary btn-block" (click)='switchToUpdate(u)'>Edit
+      <div class="col-sm-3">
+        <button type="button" class="btn btn-secondary btn-block" (click)='switchToUpdate(p)'>Update
         </button>
       </div>
-      <div class="col-sm-2">
-        <button type="button" class="btn btn-secondary btn-block" (click)="deleteUser(u.userId)">Delete
+    </div>
+    <div class="row">
+      <div class="col-sm-3">
+        <label for="priority">Priority:</label>
+        <h6 id="priority">{{p.priority}}</h6>
+      </div>
+      <div class="col-sm-3">
+        <label for="noOfCompletedTasks">Completed:</label>
+        <h6 id="noOfCompletedTasks">{{p.noOfCompletedTasks}}</h6>
+      </div>
+      <div class="col-sm-3">
+        <label for="endDate">iEndDate Date:</label>
+          <h6 id="endDate">{{p.endDate}}</h6>
+      </div>
+      <div class="col-sm-3">
+        <button type="button" class="btn btn-secondary btn-block" (click)='suspend()'>Suspend
         </button>
       </div>
     </div>
