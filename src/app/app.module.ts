@@ -15,6 +15,7 @@ import { FilterStartDatePipe } from './filter-start-date.pipe';
 import { FilterEndDatePipe } from './filter-end-date.pipe';
 import { AddprojectComponent } from './addproject/addproject.component';
 import { AdduserComponent } from './adduser/adduser.component';
+import { FilterUserPipe } from './filter-user.pipe';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,8 @@ import { AdduserComponent } from './adduser/adduser.component';
     FilterStartDatePipe,
     FilterEndDatePipe,
     AddprojectComponent,
-    AdduserComponent
+    AdduserComponent,
+    FilterUserPipe
   ],
   imports: [
     BrowserModule,

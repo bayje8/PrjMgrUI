@@ -1,16 +1,19 @@
 <div class="container" style="margin-top:30px">
   <form name="add user" [formGroup]="addUserForm" (ngSubmit)="onSubmit()">
+    <div *ngIf="validationMsg" class="alert alert-danger">
+      First Name, Last Name and Employee ID are Mandatory!
+    </div>
     <div>
       <label for="ifirstname">First Name:</label>
-      <input type="text" class="form-control" id="ifirstname" formControlName="ifirstname">
+      <input type="text" class="form-control" id="ifirstname" formControlName="ifirstname" required>
     </div>
     <div>
       <label for="ilastname">Last Name:</label>
-      <input type="text" class="form-control" id="ilastname" formControlName="ilastname">
+      <input type="text" class="form-control" id="ilastname" formControlName="ilastname" required>
     </div>
     <div>
       <label for="iemployeeid">Employee ID:</label>
-      <input type="text" class="form-control" id="iemployeeid" formControlName="iemployeeid">
+      <input type="text" class="form-control" id="iemployeeid" formControlName="iemployeeid" required>
     </div>
     <br>
     <div class="row">
@@ -26,23 +29,24 @@
   <hr style="border-top: solid 1px;" />
   <div class="row">
     <div class="col-sm-5">
+      <label>Search:</label>&nbsp;&nbsp;
       <input type="text" [(ngModel)]="searchStr">
     </div>
     <div class="col-sm-1 justify-content-left align-self-left">
-      <h5>Sort:</h5>
+      <label>Sort By:</label>
     </div>
     <div class="col-sm-2">
-      <button type="button" class="btn btn-block btn-outline-success">First Name</button>
+      <button type="button" class="btn btn-block btn-outline-success" (click)="sortByFirstName()">First Name</button>
     </div>
     <div class="col-sm-2">
-      <button type="button" class="btn btn-block btn-outline-success">Last Name</button>
+      <button type="button" class="btn btn-block btn-outline-success" (click)="sortByLastName()">Last Name</button>
     </div>
     <div class="col-sm-2">
-      <button type="button" class="btn btn-block btn-outline-success">Employee ID</button>
+      <button type="button" class="btn btn-block btn-outline-success" (click)="sortByEmployeeId()">Employee ID</button>
     </div>
   </div>
   <hr style="border-top: dotted 1px;" />
-  <div *ngFor="let u of users">
+  <div *ngFor="let u of users | filterUser:searchStr">
     <div class="row">
       <div class="col-sm-3">
         <label for="firstname">First Name</label>

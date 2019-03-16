@@ -12,10 +12,11 @@ import { user } from '../user';
 export class AdduserComponent implements OnInit {
   addUserForm: FormGroup;
   aUser = new user();
-  searchStr: String = "search...";
+  searchStr: String = "";
   users: Array<user> = [];
   addflag: boolean = true;
   updatingUser = new user();
+  validationMsg: boolean = false;
 
   constructor(private taskService: TaskserviceService, private route: ActivatedRoute, private router: Router) {
     this.initform();
@@ -34,10 +35,15 @@ export class AdduserComponent implements OnInit {
   }
 
   onSubmit() {
-    if (this.addflag) {
-      this.addUser();
+    if (this.addUserForm.get("ifirstname").status == "INVALID" || this.addUserForm.get("ilastname").status == "INVALID" || this.addUserForm.get("iemployeeid").status == "INVALID") {
+      this.validationMsg = true;
     } else {
-      this.updateUser();
+      this.validationMsg = false;
+      if (this.addflag) {
+        this.addUser();
+      } else {
+        this.updateUser();
+      }
     }
   }
 
@@ -76,6 +82,7 @@ export class AdduserComponent implements OnInit {
   switchToUpdate(u: user) {
     this.updatingUser = u;
     this.addflag = false;
+    this.validationMsg = false;
     this.addUserForm.get("ifirstname").setValue(this.updatingUser.firstName);
     this.addUserForm.get("ilastname").setValue(this.updatingUser.lastName);
     this.addUserForm.get("iemployeeid").setValue(this.updatingUser.employeeId);
@@ -97,5 +104,17 @@ export class AdduserComponent implements OnInit {
       this.users = data;
       console.log(data);
     });
+  }
+
+  sortByFirstName() {
+    this.users.sort((a, b) => a.firstName.localeCompare(b.firstName));
+  }
+
+  sortByLastName() {
+    this.users.sort((a, b) => a.lastName.localeCompare(b.lastName));
+  }
+
+  sortByEmployeeId() {
+    this.users.sort((a, b) => a.employeeId.localeCompare(b.employeeId));
   }
 }
