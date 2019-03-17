@@ -7,7 +7,8 @@
       <input type="text" class="form-control" id="project" formControlName="project" [(ngModel)]="projectName" disabled
         required>
       <div class="input-group-append">
-        <button class="btn btn-success" type="button" data-toggle="modal" data-target="#projectModal">Search</button>
+        <button class="btn btn-success" type="button" data-toggle="modal" data-target="#projectModal"
+          (click)="triggerProjectModel()">Search</button>
       </div>
     </div>
     <div>
@@ -33,7 +34,8 @@
       <input type="text" class="form-control" id="parenttask" formControlName="parenttask" [(ngModel)]="parenttaskName"
         disabled required>
       <div class="input-group-append">
-        <button class="btn btn-success" type="button" data-toggle="modal" data-target="#parenttaskModal">Search</button>
+        <button class="btn btn-success" type="button" data-toggle="modal" data-target="#projectModal"
+          (click)="triggerParentTaskModel()">Search</button>
       </div>
     </div>
     <div>
@@ -51,7 +53,7 @@
       </div>
       <input type="text" class="form-control" id="user" formControlName="user" [(ngModel)]="userName" disabled required>
       <div class="input-group-append">
-        <button class="btn btn-success" type="button" data-toggle="modal" data-target="#userModal">Search</button>
+        <button class="btn btn-success" type="button" data-toggle="modal" data-target="#projectModal" (click)="triggerUserModal()">Search</button>
       </div>
     </div>
     <br>
@@ -71,7 +73,9 @@
 
         <!-- Modal Header -->
         <div class="modal-header">
-          <h5 class="modal-title">Select a project!</h5>
+          <h5 *ngIf="projectFlag" class="modal-title">Search for a project for this task</h5>
+          <h5 *ngIf="parenttaskFlag" class="modal-title">Search for a parent Task for this task</h5>
+          <h5 *ngIf="userFlag" class="modal-title">Search for a User for this task</h5>
           <button type="button" class="close" data-dismiss="modal">&times;</button>
         </div>
 
@@ -79,12 +83,12 @@
         <div class="modal-body">
           <div class="container mt-3">
             <div class="row">
-              <label for="searchProject">Search:</label>
-              <input type="text" [(ngModel)]="searchProject" placeholder="start typing...">
+              <label for="searchStr">Search:</label>
+              <input type="text" [(ngModel)]="searchStr" placeholder="start typing...">
             </div>
             <hr style="border-top: dotted 1px;" />
-            <div>
-              <div *ngFor="let p of projects | filterProject:searchProject" class="row">
+            <div *ngIf="projectFlag">
+              <div *ngFor="let p of projects | filterProject:searchStr" class="row">
                 <div class="col col-sm-10">
                   <span>{{p.project}}</span>
                 </div>
@@ -94,98 +98,38 @@
                 <hr style="border-top: dotted 1px;" />
               </div>
             </div>
-          </div>
-
-          <!-- Modal footer -->
-          <div class="modal-footer">
-            <label>{{projectSelectionStr}}</label>
-            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-          </div>
-
-        </div>
-      </div>
-    </div>
-
-    <!-- The User Modal -->
-    <div class="modal" id="userModal">
-      <div class="modal-dialog">
-        <div class="modal-content">
-
-          <!-- Modal Header -->
-          <div class="modal-header">
-            <h5 class="modal-title">Select a User for this Task!</h5>
-            <button type="button" class="close" data-dismiss="modal">&times;</button>
-          </div>
-
-          <!-- Modal body -->
-          <div class="modal-body">
-            <div class="container mt-3">
-              <div class="row">
-                <label for="searchProject">Search:</label>
-                <input type="text" [(ngModel)]="searchUser" placeholder="start typing...">
+            <div *ngIf="userFlag">
+                <div *ngFor=" let u of users | filterUserByLastAndFirstName:searchStr" class="row">
+              <div class="col col-sm-10">
+                <span>{{u.firstName + "," + u.lastName}}</span>
+              </div>
+              <div class="col col-sm-2">
+                <button class="btn btn-success btn-sm" length="40" (click)="selectUser(u)">select</button>
               </div>
               <hr style="border-top: dotted 1px;" />
-              <div>
-                <div *ngFor="let u of users | filterUserByLastAndFirstName:searchUser" class="row">
-                  <div class="col col-sm-10">
-                    <span>{{u.firstName + "," + u.lastName}}</span>
-                  </div>
-                  <div class="col col-sm-2">
-                    <button class="btn btn-success btn-sm" length="40" (click)="selectUser(u)">select</button>
-                  </div>
-                  <hr style="border-top: dotted 1px;" />
+            </div>
+            <div *ngIf="parenttaskFlag">
+              <div *ngFor="let pt of parenttasks | filterProject:searchStr" class="row">
+                <div class="col col-sm-10">
+                  <span>{{pt.parent_task}}</span>
                 </div>
-              </div>
-            </div>
-
-            <!-- Modal footer -->
-            <div class="modal-footer">
-              <label>{{userSelectionStr}}</label>
-              <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- The Parent Task Modal -->
-    <div class="modal" id="parenttaskModal">
-        <div class="modal-dialog">
-          <div class="modal-content">
-  
-            <!-- Modal Header -->
-            <div class="modal-header">
-              <h5 class="modal-title">Select a Parent Task for this Task!</h5>
-              <button type="button" class="close" data-dismiss="modal">&times;</button>
-            </div>
-  
-            <!-- Modal body -->
-            <div class="modal-body">
-              <div class="container mt-3">
-                <div class="row">
-                  <label for="searchParentTask">Search:</label>
-                  <input type="text" [(ngModel)]="searchParentTask" placeholder="start typing...">
+                <div class="col col-sm-2">
+                  <button class="btn btn-success btn-sm" length="40" (click)="selectParentTask(pt)">select</button>
                 </div>
                 <hr style="border-top: dotted 1px;" />
-                <div>
-                  <div *ngFor="let pt of parenttasks | filterProject:searchParentTask" class="row">
-                    <div class="col col-sm-10">
-                      <span>{{pt.parent_task}}</span>
-                    </div>
-                    <div class="col col-sm-2">
-                      <button class="btn btn-success btn-sm" length="40" (click)="selectParentTask(pt)">select</button>
-                    </div>
-                    <hr style="border-top: dotted 1px;" />
-                  </div>
-                </div>
               </div>
-  
-              <!-- Modal footer -->
-              <div class="modal-footer">
-                <label>{{userSelectionStr}}</label>
-                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-              </div>
-  
             </div>
           </div>
         </div>
+
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <label *ngIf="projectFlag">{{projectSelectionStr}}</label>
+          <label *ngIf="parenttaskFlag">{{parenttaskSelectionStr}}</label>
+          <label *ngIf="userFlag">{{userSelectionStr}}</label>
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+        </div>
+
+      </div>
     </div>
+  </div>

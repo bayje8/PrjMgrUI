@@ -17,7 +17,7 @@ export class AddtaskComponent implements OnInit {
   addTaskForm: FormGroup;
   aTask = new TaskVO();
   projectName: string = "";
-  searchProject: string = "";
+  searchStr: string = "";
   selectedProject: project = new project();
   projectSelectionStr: string = "";
   projects: Array<project> = [];
@@ -29,6 +29,9 @@ export class AddtaskComponent implements OnInit {
   users: Array<user> = [];
   userSelectionStr: string = "";
   userName: string = "";
+  projectFlag: boolean = true;
+  userFlag: boolean = false;
+  parenttaskFlag: boolean = false;
   constructor(private taskService: TaskserviceService, private route: ActivatedRoute, private router: Router) {
     this.initForm();
     this.getProjects();
@@ -39,6 +42,24 @@ export class AddtaskComponent implements OnInit {
   ngOnInit() {
   }
 
+  triggerProjectModel() {
+    this.projectFlag = true;
+    this.userFlag = false;
+    this.parenttaskFlag = false;
+  }
+
+  triggerParentTaskModel(){
+    this.projectFlag = false;
+    this.userFlag = false;
+    this.parenttaskFlag = true;
+  }
+
+  triggerUserModal(){
+    this.projectFlag = false;
+    this.userFlag = true;
+    this.parenttaskFlag = false;
+  }
+  
   initForm() {
     this.addTaskForm = new FormGroup({
       project: new FormControl(),
@@ -47,7 +68,7 @@ export class AddtaskComponent implements OnInit {
       priority: new FormControl(),
       parenttask: new FormControl(),
       startdate: new FormControl(),
-      edndate: new FormControl(),
+      enddate: new FormControl(),
       user: new FormControl()
     });
   }
@@ -61,13 +82,16 @@ export class AddtaskComponent implements OnInit {
     this.taskService.getParentTasks().subscribe((data) => {
       this.parenttasks = data;
     });
+    console.log("Fetched Parent Tasks are: " + this.parenttasks);
   }
 
   getUsers() {
-    console.log("calling to get users...");
+    this.users = [];
     this.taskService.getUsers().subscribe((data) => {
       this.users = data;
+      console.log(data);
     });
+    console.log("Fetched users are: "+this.users)
   }
 
   onSubmit() {
