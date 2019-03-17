@@ -53,7 +53,8 @@
       </div>
       <input type="text" class="form-control" id="user" formControlName="user" [(ngModel)]="userName" disabled required>
       <div class="input-group-append">
-        <button class="btn btn-success" type="button" data-toggle="modal" data-target="#projectModal" (click)="triggerUserModal()">Search</button>
+        <button class="btn btn-success" type="button" data-toggle="modal" data-target="#projectModal"
+          (click)="triggerUserModal()">Search</button>
       </div>
     </div>
     <br>
@@ -99,17 +100,19 @@
               </div>
             </div>
             <div *ngIf="userFlag">
-                <div *ngFor=" let u of users | filterUserByLastAndFirstName:searchStr" class="row">
-              <div class="col col-sm-10">
-                <span>{{u.firstName + "," + u.lastName}}</span>
+              <div *ngFor=" let u of users | filterUserByLastAndFirstName:searchStr" class="row">
+                <div class="col col-sm-10">
+                  <span>{{u.firstName + "," + u.lastName}}</span>
+                </div>
+                <div class="col col-sm-2">
+                  <button class="btn btn-success btn-sm" length="40" (click)="selectUser(u)">select</button>
+                </div>
+                <hr style="border-top: dotted 1px;" />
               </div>
-              <div class="col col-sm-2">
-                <button class="btn btn-success btn-sm" length="40" (click)="selectUser(u)">select</button>
-              </div>
-              <hr style="border-top: dotted 1px;" />
             </div>
             <div *ngIf="parenttaskFlag">
-              <div *ngFor="let pt of parenttasks | filterProject:searchStr" class="row">
+              <h4>printing fine</h4>
+              <div *ngFor=" let pt of parenttasks" class="row">
                 <div class="col col-sm-10">
                   <span>{{pt.parent_task}}</span>
                 </div>
@@ -120,16 +123,13 @@
               </div>
             </div>
           </div>
+          <!-- Modal footer -->
+          <div class="modal-footer">
+            <label *ngIf="projectFlag">{{projectSelectionStr}}</label>
+            <label *ngIf="parenttaskFlag">{{parenttaskSelectionStr}}</label>
+            <label *ngIf="userFlag">{{userSelectionStr}}</label>
+            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+          </div>
         </div>
-
-        <!-- Modal footer -->
-        <div class="modal-footer">
-          <label *ngIf="projectFlag">{{projectSelectionStr}}</label>
-          <label *ngIf="parenttaskFlag">{{parenttaskSelectionStr}}</label>
-          <label *ngIf="userFlag">{{userSelectionStr}}</label>
-          <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-        </div>
-
       </div>
     </div>
-  </div>

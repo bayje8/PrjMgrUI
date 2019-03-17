@@ -5,6 +5,7 @@ import { map, tap, catchError } from 'rxjs/operators'
 import { TaskVO } from './task';
 import { user } from './user';
 import { project } from './project';
+import { parenttask } from './parenttask';
 
 
 const endpoint = 'http://localhost:8082/';
@@ -28,8 +29,8 @@ export class TaskserviceService {
   }
 
 
-  getTasks(): Observable<any> {
-    return this.http.get(endpoint + "tasks").pipe(map(this.extractData));
+  getTasks(project_id:number): Observable<any> {
+    return this.http.get(endpoint + "tasks/byproject/"+project_id).pipe(map(this.extractData));
   }
 
   getTask(id: number): Observable<any> {
@@ -95,6 +96,11 @@ export class TaskserviceService {
   getParentTasks():Observable<any>{
     return this.http.get(endpoint + "parenttasks").pipe(map(this.extractData));
   }
+
+  addParentTask(pTask:parenttask):Observable<any>{
+    return this.http.post<any>(endpoint + 'parenttasks', JSON.stringify(pTask), httpOptions).pipe(tap((parenttask) => console.log('added parent Task id=${parenttask.parent_id}')), catchError(this.handleError<any>('addParentTask')));
+  }
+
   private handleError<T>(operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
       console.error(error);

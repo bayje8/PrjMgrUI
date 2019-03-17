@@ -16,6 +16,7 @@ import { formatDate } from '@angular/common';
 export class AddtaskComponent implements OnInit {
   addTaskForm: FormGroup;
   aTask = new TaskVO();
+  aParentTask = new parenttask();
   projectName: string = "";
   searchStr: string = "";
   selectedProject: project = new project();
@@ -32,11 +33,13 @@ export class AddtaskComponent implements OnInit {
   projectFlag: boolean = true;
   userFlag: boolean = false;
   parenttaskFlag: boolean = false;
+  addParentTaskFlag: boolean = false;
   constructor(private taskService: TaskserviceService, private route: ActivatedRoute, private router: Router) {
     this.initForm();
     this.getProjects();
     this.getParentTasks();
     this.getUsers();
+    this.addParentTaskFlag = false;
   }
 
   ngOnInit() {
@@ -48,18 +51,18 @@ export class AddtaskComponent implements OnInit {
     this.parenttaskFlag = false;
   }
 
-  triggerParentTaskModel(){
+  triggerParentTaskModel() {
     this.projectFlag = false;
     this.userFlag = false;
     this.parenttaskFlag = true;
   }
 
-  triggerUserModal(){
+  triggerUserModal() {
     this.projectFlag = false;
     this.userFlag = true;
     this.parenttaskFlag = false;
   }
-  
+
   initForm() {
     this.addTaskForm = new FormGroup({
       project: new FormControl(),
@@ -81,8 +84,8 @@ export class AddtaskComponent implements OnInit {
     console.log("Calling get parent tasks...");
     this.taskService.getParentTasks().subscribe((data) => {
       this.parenttasks = data;
+      console.log(data);
     });
-    console.log("Fetched Parent Tasks are: " + this.parenttasks);
   }
 
   getUsers() {
@@ -91,23 +94,47 @@ export class AddtaskComponent implements OnInit {
       this.users = data;
       console.log(data);
     });
-    console.log("Fetched users are: "+this.users)
+    //console.log("Fetched users are: " + this.users)
   }
 
   onSubmit() {
     console.log("submitted!")
+    if (this.addParentTaskFlag) {
+      this.addParentTask();
+    } else {
+      this.addTask();
+    }
+  }
 
-    this.aTask.parentTask = this.addTaskForm.get("parenttask").value
-    this.aTask.task = this.addTaskForm.get("task").value
-    this.aTask.priority = this.addTaskForm.get("priority").value
-    this.aTask.startDate = this.addTaskForm.get("startdate").value
-    this.aTask.endDate = ""
+  addTask() {
+    this.aTask.parent_id = this.selectedParentTask.parent_id;
+    this.aTask.project_id = this.selectedProject.project_id;
+    this.aTask.userId = this.selectedUser.userId;
+    this.aTask.task = this.addTaskForm.get("task").value;
+    this.aTask.priority = this.addTaskForm.get("priority").value;
+    this.aTask.start_date = this.addTaskForm.get("startdate").value;
+    this.aTask.end_date = "";
+    this.aTask.status = "open";
+    this.aTask.parenttask = this.selectedParentTask.parent_task;
+
     console.log(this.aTask);
-    this.taskService.addTask(this.aTask).subscribe((err) => {
+    this.taskService.addTask(this.aTask).subscribe((data) => {
+      console.log(data);
+      window.location.reload();
+    }, (err) => {
       console.log(err)
-      this.router.navigateByUrl("");
     });
+  }
 
+  addParentTask() {
+    this.aParentTask.parent_task = this.addTaskForm.get("task").value
+    console.log("Parent Task Creating...")
+    this.taskService.addParentTask(this.aParentTask).subscribe((data) => {
+      console.log("Added Parent Task...");
+      window.location.reload();
+    }, (err) => {
+      console.log(err);
+    });
   }
 
   reset() {
@@ -117,6 +144,7 @@ export class AddtaskComponent implements OnInit {
   altParentTaskFields() {
     let element = <HTMLInputElement>document.getElementById("iParentTaskChkBx");
     if (element.checked == false) {
+      this.addParentTaskFlag = false;
       this.addTaskForm.get("priority").enable();
       this.addTaskForm.get("parenttask").enable();
       this.addTaskForm.get("startdate").enable();
@@ -127,6 +155,7 @@ export class AddtaskComponent implements OnInit {
       currentDate.setDate(currentDate.getDate() + parseInt("1"));
       this.addTaskForm.get("enddate").setValue(formatDate(currentDate, 'yyyy-MM-dd', 'en'));
     } else {
+      this.addParentTaskFlag = true;
       this.addTaskForm.get("priority").disable();
       this.addTaskForm.get("parenttask").disable();
       this.addTaskForm.get("startdate").disable();
