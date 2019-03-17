@@ -3,7 +3,7 @@ export class project{
 	project:string;
 	startDate:string;
 	endDate:string;
-	priority:string;
+	priority:number;
     user_id:number;
     noOfTasks:number;
     noOfCompletedTasks:number;

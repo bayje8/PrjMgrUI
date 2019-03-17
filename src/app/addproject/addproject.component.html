@@ -9,7 +9,7 @@
     </div>
     <div class="form-check">
       <label class="form-check-label">
-        <input type="checkbox" class="form-check-input" value="true">Set Start Date and End Date
+        <input type="checkbox" class="form-check-input" id ="iDatesChkBx" formControlName="iDatesChkBx" (click)="populateDates()">&nbsp;&nbsp;&nbsp;Set Start Date and End Date
       </label>
     </div>
     <div>
@@ -29,9 +29,9 @@
       <div class="input-group-prepend">
         <span class="input-group-text">Manager</span>
       </div>
-      <input type="text" class="form-control" id="iManager" formControlName="iManager" disabled required>
+      <input type="text" class="form-control" id="iManager" formControlName="iManager" [(ngModel)]="managerFullName" disabled required>
       <div class="input-group-append">
-        <button class="btn btn-success" type="button">Search</button>
+        <button class="btn btn-success" type="button" data-toggle="modal" data-target="#myModal">Search</button>
       </div>
     </div>
     <br>
@@ -55,8 +55,8 @@
       <label>Sort By:</label>
     </div>
     <div class="col-sm-2">
-        <button type="button" class="btn btn-block btn-outline-success" (click)="sortByStartDate()">Start Date</button>
-      </div>
+      <button type="button" class="btn btn-block btn-outline-success" (click)="sortByStartDate()">Start Date</button>
+    </div>
     <div class="col-sm-2">
       <button type="button" class="btn btn-block btn-outline-success" (click)="sortByEndDate()">End Date</button>
     </div>
@@ -68,7 +68,7 @@
     </div>
   </div>
   <hr style="border-top: dotted 1px;" />
-  <div *ngFor="let p of projects">
+  <div *ngFor="let p of projects | filterProject:searchStr">
     <div class="row">
       <div class="col-sm-3">
         <label for="project">Project:</label>
@@ -80,7 +80,7 @@
       </div>
       <div class="col-sm-3">
         <label for="startDate">Start Date:</label>
-          <h6 id="startDate">{{p.startDate}}</h6>
+        <h6 id="startDate">{{p.startDate}}</h6>
       </div>
       <div class="col-sm-3">
         <button type="button" class="btn btn-secondary btn-block" (click)='switchToUpdate(p)'>Update
@@ -97,8 +97,8 @@
         <h6 id="noOfCompletedTasks">{{p.noOfCompletedTasks}}</h6>
       </div>
       <div class="col-sm-3">
-        <label for="endDate">iEndDate Date:</label>
-          <h6 id="endDate">{{p.endDate}}</h6>
+        <label for="endDate">End Date:</label>
+        <h6 id="endDate">{{p.endDate}}</h6>
       </div>
       <div class="col-sm-3">
         <button type="button" class="btn btn-secondary btn-block" (click)='suspend()'>Suspend
@@ -107,4 +107,46 @@
     </div>
     <hr style="border-top: dotted 1px;" />
   </div>
-</div>
+
+  <!-- The Modal -->
+  <div class="modal" id="myModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h5 class="modal-title">Select a Manager to this project!</h5>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+
+        <!-- Modal body -->
+        <div class="modal-body">
+          <div class="container mt-3">
+            <div class="row">
+              <label for="searchUser">Search:</label>
+              <input type="text" [(ngModel)]="searchUser" placeholder="start typing...">
+            </div>
+            <hr style="border-top: dotted 1px;" />
+            <div>
+              <div *ngFor="let u of users" class="row">
+                <div class="col col-sm-10">
+                  <span>{{u.firstName + "," + u.lastName}}</span>
+                </div>
+                <div class="col col-sm-2">
+                  <button class="btn btn-success btn-sm" length="40" (click)="selectManager(u)">select</button>
+                </div>
+                <hr style="border-top: dotted 1px;" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Modal footer -->
+          <div class="modal-footer">
+            <label>{{managerSelectionStr}}</label>
+            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>

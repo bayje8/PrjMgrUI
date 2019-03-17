@@ -4,6 +4,7 @@ import { Observable, of } from 'rxjs';
 import { map, tap, catchError } from 'rxjs/operators'
 import { TaskVO } from './task';
 import { user } from './user';
+import { project } from './project';
 
 
 const endpoint = 'http://localhost:8082/';
@@ -71,7 +72,24 @@ export class TaskserviceService {
     return this.http.get(endpoint + "users").pipe(map(this.extractData));
   }
 
+  getUserById(id: number):Observable<any>{
+    return this.http.get(endpoint + "users/"+id).pipe(map(this.extractData));
+  }
+
   //--------------------Project Services-----------------------//
+
+  addProject(aProject: project): Observable<any> {
+    return this.http.post<any>(endpoint + 'projects', JSON.stringify(aProject), httpOptions).pipe(tap((project) => console.log('added project id=${project.project_id}')), catchError(this.handleError<any>('addProject')));
+  }
+
+  updateProject(uProject:project):Observable<any>{
+    return this.http.put<any>(endpoint + 'projects', JSON.stringify(uProject), httpOptions).pipe(tap((project) => console.log('updated project id=${project.project_id}')), catchError(this.handleError<any>('updateProject')));
+  }
+
+  getProjects():Observable<any>{
+    return this.http.get(endpoint + "projects").pipe(map(this.extractData));
+  }
+
   private handleError<T>(operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
       console.error(error);
