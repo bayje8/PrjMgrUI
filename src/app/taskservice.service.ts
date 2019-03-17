@@ -90,6 +90,11 @@ export class TaskserviceService {
     return this.http.get(endpoint + "projects").pipe(map(this.extractData));
   }
 
+  //-----------------Parent Task Services------------------------///
+
+  getParentTasks():Observable<any>{
+    return this.http.get(endpoint + "parenttasks").pipe(map(this.extractData));
+  }
   private handleError<T>(operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
       console.error(error);

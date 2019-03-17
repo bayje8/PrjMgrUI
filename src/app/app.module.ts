@@ -17,6 +17,7 @@ import { AddprojectComponent } from './addproject/addproject.component';
 import { AdduserComponent } from './adduser/adduser.component';
 import { FilterUserPipe } from './filter-user.pipe';
 import { FilterProjectPipe } from './filter-project.pipe';
+import { FilterUserByLastAndFirstNamePipe } from './filter-user-by-last-and-first-name.pipe';
 
 @NgModule({
   declarations: [
@@ -33,7 +34,8 @@ import { FilterProjectPipe } from './filter-project.pipe';
     AddprojectComponent,
     AdduserComponent,
     FilterUserPipe,
-    FilterProjectPipe
+    FilterProjectPipe,
+    FilterUserByLastAndFirstNamePipe
   ],
   imports: [
     BrowserModule,

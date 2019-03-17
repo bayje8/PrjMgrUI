@@ -3,6 +3,10 @@ import { FormGroup, FormControl } from '@angular/forms';
 import { TaskVO } from '../task';
 import { TaskserviceService } from '../taskservice.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { project } from '../project';
+import { parenttask } from '../parenttask';
+import { user } from '../user';
+import { formatDate } from '@angular/common';
 
 @Component({
   selector: 'app-addtask',
@@ -12,9 +16,24 @@ import { ActivatedRoute, Router } from '@angular/router';
 export class AddtaskComponent implements OnInit {
   addTaskForm: FormGroup;
   aTask = new TaskVO();
-
+  projectName: string = "";
+  searchProject: string = "";
+  selectedProject: project = new project();
+  projectSelectionStr: string = "";
+  projects: Array<project> = [];
+  parenttaskName: string = "";
+  parenttaskSelectionStr: string = "";
+  parenttasks: Array<parenttask> = [];
+  selectedParentTask: parenttask = new parenttask();
+  selectedUser: user = new user();
+  users: Array<user> = [];
+  userSelectionStr: string = "";
+  userName: string = "";
   constructor(private taskService: TaskserviceService, private route: ActivatedRoute, private router: Router) {
     this.initForm();
+    this.getProjects();
+    this.getParentTasks();
+    this.getUsers();
   }
 
   ngOnInit() {
@@ -22,10 +41,32 @@ export class AddtaskComponent implements OnInit {
 
   initForm() {
     this.addTaskForm = new FormGroup({
+      project: new FormControl(),
       task: new FormControl(),
+      iParentTaskChkBx: new FormControl(),
       priority: new FormControl(),
       parenttask: new FormControl(),
       startdate: new FormControl(),
+      edndate: new FormControl(),
+      user: new FormControl()
+    });
+  }
+
+  getProjects() {
+    this.taskService.getProjects().subscribe((data) => { this.projects = data });
+  }
+
+  getParentTasks() {
+    console.log("Calling get parent tasks...");
+    this.taskService.getParentTasks().subscribe((data) => {
+      this.parenttasks = data;
+    });
+  }
+
+  getUsers() {
+    console.log("calling to get users...");
+    this.taskService.getUsers().subscribe((data) => {
+      this.users = data;
     });
   }
 
@@ -38,13 +79,58 @@ export class AddtaskComponent implements OnInit {
     this.aTask.startDate = this.addTaskForm.get("startdate").value
     this.aTask.endDate = ""
     console.log(this.aTask);
-    this.taskService.addTask(this.aTask).subscribe((err) => { console.log(err) 
+    this.taskService.addTask(this.aTask).subscribe((err) => {
+      console.log(err)
       this.router.navigateByUrl("");
     });
-    
+
   }
 
   reset() {
     this.initForm();
+  }
+
+  altParentTaskFields() {
+    let element = <HTMLInputElement>document.getElementById("iParentTaskChkBx");
+    if (element.checked == false) {
+      this.addTaskForm.get("priority").enable();
+      this.addTaskForm.get("parenttask").enable();
+      this.addTaskForm.get("startdate").enable();
+      this.addTaskForm.get("enddate").enable();
+      this.addTaskForm.get("user").enable();
+      let currentDate = new Date();
+      this.addTaskForm.get("startdate").setValue(formatDate(new Date(), 'yyyy-MM-dd', 'en'));
+      currentDate.setDate(currentDate.getDate() + parseInt("1"));
+      this.addTaskForm.get("enddate").setValue(formatDate(currentDate, 'yyyy-MM-dd', 'en'));
+    } else {
+      this.addTaskForm.get("priority").disable();
+      this.addTaskForm.get("parenttask").disable();
+      this.addTaskForm.get("startdate").disable();
+      this.addTaskForm.get("enddate").disable();
+      this.addTaskForm.get("user").disable();
+      this.addTaskForm.get("priority").setValue("");
+      this.addTaskForm.get("parenttask").setValue("");
+      this.addTaskForm.get("startdate").setValue("");
+      this.addTaskForm.get("enddate").setValue("");
+      this.addTaskForm.get("user").setValue("");
+    }
+  }
+
+  selectProject(p: project) {
+    this.selectedProject = p;
+    this.projectName = p.project;
+    this.projectSelectionStr = this.projectName + " - is selected. Please click the close button to exit!";
+  }
+
+  selectParentTask(pt: parenttask) {
+    this.selectedParentTask = pt;
+    this.parenttaskName = pt.parent_task;
+    this.parenttaskSelectionStr = this.parenttaskName + " - is selected. Please click the close button to exit!";
+  }
+
+  selectUser(u: user) {
+    this.selectedUser = u;
+    this.userName = u.firstName + " , " + u.lastName;
+    this.userSelectionStr = this.userName + " - is selected. Please click the close button to exit!";
   }
 }

@@ -128,7 +128,7 @@
             </div>
             <hr style="border-top: dotted 1px;" />
             <div>
-              <div *ngFor="let u of users" class="row">
+              <div *ngFor="let u of users | filterUserByLastAndFirstName:searchUser" class="row">
                 <div class="col col-sm-10">
                   <span>{{u.firstName + "," + u.lastName}}</span>
                 </div>

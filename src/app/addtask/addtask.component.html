@@ -1,51 +1,58 @@
 <div class="container" style="margin-top:30px">
   <form name="add task" [formGroup]="addTaskForm" (ngSubmit)="onSubmit()">
+    <div class="input-group mb-3">
+      <div class="input-group-prepend">
+        <span class="input-group-text">Project</span>
+      </div>
+      <input type="text" class="form-control" id="project" formControlName="project" [(ngModel)]="projectName" disabled
+        required>
+      <div class="input-group-append">
+        <button class="btn btn-success" type="button" data-toggle="modal" data-target="#projectModal">Search</button>
+      </div>
+    </div>
     <div>
       <label for="task">Task:</label>
       <input type="text" class="form-control" id="task" formControlName="task">
     </div>
-    <div>
-      <label for="priority">Priority:</label>      
-      <select class="form-control" id="priority" formControlName="priority">
-        <option>1</option>
-        <option>2</option>
-        <option>3</option>
-        <option>4</option>
-        <option>5</option>
-        <option>6</option>
-        <option>7</option>
-        <option>8</option>
-        <option>9</option>
-        <option>10</option>
-        <option>11</option>
-        <option>12</option>
-        <option>13</option>
-        <option>14</option>
-        <option>15</option>
-        <option>16</option>
-        <option>17</option>
-        <option>18</option>
-        <option>19</option>
-        <option>20</option>
-        <option>21</option>
-        <option>22</option>
-        <option>23</option>
-        <option>24</option>
-        <option>25</option>
-        <option>26</option>
-        <option>27</option>
-        <option>28</option>
-        <option>29</option>
-        <option>30</option>
-      </select>
+    <div class="form-check">
+      <label class="form-check-label">
+        <input type="checkbox" class="form-check-input" id="iParentTaskChkBx" formControlName="iParentTaskChkBx"
+          (click)="altParentTaskFields()">&nbsp;&nbsp;&nbsp;Parent Task
+      </label>
     </div>
     <div>
-      <label for="parenttask">Parent Task:</label>
-      <input type="text" class="form-control" id="parenttask" formControlName="parenttask">
+      <label for="priority">Priority:</label>
+      <input type="range" class="form-control" min="0" max="30" step="1" id="priority" formControlName="priority"
+        required>
+    </div>
+    <br>
+    <div class="input-group mb-3">
+      <div class="input-group-prepend">
+        <span class="input-group-text">Parent Task</span>
+      </div>
+      <input type="text" class="form-control" id="parenttask" formControlName="parenttask" [(ngModel)]="parenttaskName"
+        disabled required>
+      <div class="input-group-append">
+        <button class="btn btn-success" type="button" data-toggle="modal" data-target="#parenttaskModal">Search</button>
+      </div>
     </div>
     <div>
       <label for="startdate">Start Date:</label>
       <input type="date" class="form-control" id="startdate" formControlName="startdate">
+    </div>
+    <div>
+      <label for="enddate">End Date:</label>
+      <input type="date" class="form-control" id="enddate" formControlName="enddate">
+    </div>
+    <br>
+    <div class="input-group mb-3">
+      <div class="input-group-prepend">
+        <span class="input-group-text">User</span>
+      </div>
+      <input type="text" class="form-control" id="user" formControlName="user" [(ngModel)]="userName" disabled required>
+      <div class="input-group-append">
+        <button class="btn btn-success" type="button" data-toggle="modal" data-target="#userModal">Search</button>
+      </div>
     </div>
     <br>
     <div class="row">
@@ -57,4 +64,128 @@
       </div>
     </div>
   </form>
-</div>
+  <!-- The Project Modal -->
+  <div class="modal" id="projectModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h5 class="modal-title">Select a project!</h5>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+
+        <!-- Modal body -->
+        <div class="modal-body">
+          <div class="container mt-3">
+            <div class="row">
+              <label for="searchProject">Search:</label>
+              <input type="text" [(ngModel)]="searchProject" placeholder="start typing...">
+            </div>
+            <hr style="border-top: dotted 1px;" />
+            <div>
+              <div *ngFor="let p of projects | filterProject:searchProject" class="row">
+                <div class="col col-sm-10">
+                  <span>{{p.project}}</span>
+                </div>
+                <div class="col col-sm-2">
+                  <button class="btn btn-success btn-sm" length="40" (click)="selectProject(p)">select</button>
+                </div>
+                <hr style="border-top: dotted 1px;" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Modal footer -->
+          <div class="modal-footer">
+            <label>{{projectSelectionStr}}</label>
+            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- The User Modal -->
+    <div class="modal" id="userModal">
+      <div class="modal-dialog">
+        <div class="modal-content">
+
+          <!-- Modal Header -->
+          <div class="modal-header">
+            <h5 class="modal-title">Select a User for this Task!</h5>
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+          </div>
+
+          <!-- Modal body -->
+          <div class="modal-body">
+            <div class="container mt-3">
+              <div class="row">
+                <label for="searchProject">Search:</label>
+                <input type="text" [(ngModel)]="searchUser" placeholder="start typing...">
+              </div>
+              <hr style="border-top: dotted 1px;" />
+              <div>
+                <div *ngFor="let u of users | filterUserByLastAndFirstName:searchUser" class="row">
+                  <div class="col col-sm-10">
+                    <span>{{u.firstName + "," + u.lastName}}</span>
+                  </div>
+                  <div class="col col-sm-2">
+                    <button class="btn btn-success btn-sm" length="40" (click)="selectUser(u)">select</button>
+                  </div>
+                  <hr style="border-top: dotted 1px;" />
+                </div>
+              </div>
+            </div>
+
+            <!-- Modal footer -->
+            <div class="modal-footer">
+              <label>{{userSelectionStr}}</label>
+              <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- The Parent Task Modal -->
+    <div class="modal" id="parenttaskModal">
+        <div class="modal-dialog">
+          <div class="modal-content">
+  
+            <!-- Modal Header -->
+            <div class="modal-header">
+              <h5 class="modal-title">Select a Parent Task for this Task!</h5>
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+  
+            <!-- Modal body -->
+            <div class="modal-body">
+              <div class="container mt-3">
+                <div class="row">
+                  <label for="searchParentTask">Search:</label>
+                  <input type="text" [(ngModel)]="searchParentTask" placeholder="start typing...">
+                </div>
+                <hr style="border-top: dotted 1px;" />
+                <div>
+                  <div *ngFor="let pt of parenttasks | filterProject:searchParentTask" class="row">
+                    <div class="col col-sm-10">
+                      <span>{{pt.parent_task}}</span>
+                    </div>
+                    <div class="col col-sm-2">
+                      <button class="btn btn-success btn-sm" length="40" (click)="selectParentTask(pt)">select</button>
+                    </div>
+                    <hr style="border-top: dotted 1px;" />
+                  </div>
+                </div>
+              </div>
+  
+              <!-- Modal footer -->
+              <div class="modal-footer">
+                <label>{{userSelectionStr}}</label>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+              </div>
+  
+            </div>
+          </div>
+        </div>
+    </div>
