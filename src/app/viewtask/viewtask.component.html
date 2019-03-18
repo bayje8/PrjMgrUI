@@ -52,10 +52,10 @@
       </div>
       <div class="col-sm-3 text-center justify-content-center align-self-center">
         <button *ngIf="t.endDate" type="button" class="btn btn-secondary" disabled>Edit Task</button>
-        <button *ngIf="!t.endDate" type="button" class="btn btn-secondary" (click)='updateTask(t.task_id)'>Edit
+        <button *ngIf="!t.endDate" type="button" class="btn btn-secondary" (click)='updateTask(t)'>Edit
           Task</button>&nbsp;
         <button *ngIf="t.endDate" type="button" class="btn btn-secondary disabled">End Task</button>
-        <button *ngIf="!t.endDate" type="button" class="btn btn-secondary" (click)="endTask(t, t.task_id)">End
+        <button *ngIf="!t.endDate" type="button" class="btn btn-secondary" (click)="endTask(t)">End
           Task</button>
       </div>
     </div>

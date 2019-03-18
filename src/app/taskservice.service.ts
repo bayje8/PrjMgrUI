@@ -29,8 +29,8 @@ export class TaskserviceService {
   }
 
 
-  getTasks(project_id:number): Observable<any> {
-    return this.http.get(endpoint + "tasks/byproject/"+project_id).pipe(map(this.extractData));
+  getTasks(project_id: number): Observable<any> {
+    return this.http.get(endpoint + "tasks/byproject/" + project_id).pipe(map(this.extractData));
   }
 
   getTask(id: number): Observable<any> {
@@ -41,11 +41,10 @@ export class TaskserviceService {
     return this.http.delete<any>(endpoint + 'task/' + id).pipe(tap(_ => console.log('deleted task id=${id}')), catchError(this.handleError<any>('deleteTask')));
   }
 
-  updateTask(id: number, task: TaskVO): Observable<any> {
+  updateTask(task: TaskVO): Observable<any> {
     console.log("updating into Task table");
     console.log(task);
-    console.log(id);
-    return this.http.put<any>(endpoint + 'tasks/' + id, JSON.stringify(task), httpOptions).pipe(tap(_ => console.log('updated task id=${id}')), catchError(this.handleError<any>('updateTask')));
+    return this.http.put<any>(endpoint + 'tasks', JSON.stringify(task), httpOptions).pipe(tap(_ => console.log('updated task id=${id}')), catchError(this.handleError<any>('updateTask')));
   }
 
   addTask(task: TaskVO): Observable<any> {
@@ -73,8 +72,8 @@ export class TaskserviceService {
     return this.http.get(endpoint + "users").pipe(map(this.extractData));
   }
 
-  getUserById(id: number):Observable<any>{
-    return this.http.get(endpoint + "users/"+id).pipe(map(this.extractData));
+  getUserById(id: number): Observable<any> {
+    return this.http.get(endpoint + "users/" + id).pipe(map(this.extractData));
   }
 
   //--------------------Project Services-----------------------//
@@ -83,21 +82,25 @@ export class TaskserviceService {
     return this.http.post<any>(endpoint + 'projects', JSON.stringify(aProject), httpOptions).pipe(tap((project) => console.log('added project id=${project.project_id}')), catchError(this.handleError<any>('addProject')));
   }
 
-  updateProject(uProject:project):Observable<any>{
+  updateProject(uProject: project): Observable<any> {
     return this.http.put<any>(endpoint + 'projects', JSON.stringify(uProject), httpOptions).pipe(tap((project) => console.log('updated project id=${project.project_id}')), catchError(this.handleError<any>('updateProject')));
   }
 
-  getProjects():Observable<any>{
+  getProjects(): Observable<any> {
     return this.http.get(endpoint + "projects").pipe(map(this.extractData));
+  }
+
+  getProjectById(id: number): Observable<any> {
+    return this.http.get(endpoint + "projects/" + id).pipe(map(this.extractData));
   }
 
   //-----------------Parent Task Services------------------------///
 
-  getParentTasks():Observable<any>{
+  getParentTasks(): Observable<any> {
     return this.http.get(endpoint + "parenttasks").pipe(map(this.extractData));
   }
 
-  addParentTask(pTask:parenttask):Observable<any>{
+  addParentTask(pTask: parenttask): Observable<any> {
     return this.http.post<any>(endpoint + 'parenttasks', JSON.stringify(pTask), httpOptions).pipe(tap((parenttask) => console.log('added parent Task id=${parenttask.parent_id}')), catchError(this.handleError<any>('addParentTask')));
   }
 

@@ -53,14 +53,33 @@ export class ViewtaskComponent implements OnInit {
     });
   }
 
-  updateTask(id: number) {
-    this.router.navigateByUrl('updatetask/' + id);
+  updateTask(t:TaskVO) {
+    this.router.navigateByUrl('updatetask/' + t.task_id);
   }
 
-  endTask(endingTask: TaskVO, endingTaskID: number) {
+  endTask(endingTask: TaskVO) {
     endingTask.end_date = formatDate(new Date(), 'yyyy-MM-dd', 'en');
-    this.taskService.updateTask(endingTaskID, endingTask).subscribe(data => console.log(data));
-    this.router.navigateByUrl("");
+    this.taskService.updateTask(endingTask).subscribe(data => {
+      console.log(data);
+      window.location.reload();
+    });    
+  }
+
+
+  sortByStartDate() {
+    this.tasks.sort((a, b) => { return (new Date(a.start_date).getTime() - new Date(b.start_date).getTime()) });
+  }
+
+  sortByEndDate() {
+    this.tasks.sort((a, b) => { return (new Date(a.end_date).getTime() - new Date(b.end_date).getTime()) });
+  }
+
+  sortByPriority() {
+    this.tasks.sort((a, b) => { return a.priority - b.priority });
+  }
+
+  sortByCompleted() {
+    this.tasks.sort((a, b) => { return a.status.localeCompare(b.status)});
   }
 
 }
