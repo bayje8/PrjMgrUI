@@ -10,8 +10,8 @@ export class FilterEndDatePipe implements PipeTransform {
     console.log("end date" + endDateSearch );
     var results:TaskVO[] = new Array();
     tasks.forEach(it => {
-      if (it.endDate) {
-        if (new Date(it.endDate).getTime() <= new Date(endDateSearch).getTime()) {
+      if (it.end_date) {
+        if (new Date(it.end_date).getTime() <= new Date(endDateSearch).getTime()) {
           results.push(it);
         }
       } else {

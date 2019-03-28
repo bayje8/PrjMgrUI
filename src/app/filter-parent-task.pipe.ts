@@ -7,7 +7,7 @@ import { TaskVO } from './task';
 export class FilterParentTaskPipe implements PipeTransform {
 
   transform(tasks: TaskVO[], parentTaskSearch: string): any[] {
-    return tasks.filter(it => { return it.parentTask.toLowerCase().includes(parentTaskSearch.toLowerCase()); }
+    return tasks.filter(it => { return it.parenttask.toLowerCase().includes(parentTaskSearch.toLowerCase()); }
     );
   }
 

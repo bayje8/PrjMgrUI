@@ -10,7 +10,7 @@ export class FilterStartDatePipe implements PipeTransform {
   transform(tasks: TaskVO[], startDateSearch: Date): any[] {
     console.log(startDateSearch);
     return tasks.filter(it => {
-      return new Date(it.startDate).getTime() >= new Date(startDateSearch).getTime();
+      return new Date(it.start_date).getTime() >= new Date(startDateSearch).getTime();
     });
   }
 
