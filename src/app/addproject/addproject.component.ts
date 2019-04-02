@@ -23,6 +23,8 @@ export class AddprojectComponent implements OnInit {
   managerFullName = "";
   searchUser: string = "";
   searchStr: string = "";
+  validationerrorflag: boolean = false;
+  validationErrorMsg: string = ""; 
   users: Array<user> = [];
   constructor(private taskService: TaskserviceService, private route: ActivatedRoute, private router: Router) {
     this.initform();
@@ -42,6 +44,7 @@ export class AddprojectComponent implements OnInit {
       iManager: new FormControl(),
       iDatesChkBx: new FormControl()
     });
+    this.addProjectForm.get("iPriority").setValue(15);
   }
 
   getProjects() {
@@ -51,10 +54,31 @@ export class AddprojectComponent implements OnInit {
   }
 
   onSubmit() {
-    if (this.addflag) {
-      this.addProject();
-    } else {
-      this.updateProject();
+    this.validate();
+    if (!this.validationerrorflag) {
+      if (this.addflag) {
+        this.addProject();
+      } else {
+        this.updateProject();
+      }
+    }
+  }
+
+  validate() {
+    console.log(this.addProjectForm.get("iProject").value);
+    console.log(this.addProjectForm.get("iPriority").value);
+    console.log(this.managerFullName);
+
+    if (this.addProjectForm.get("iProject").value == "" || this.managerFullName == "") {
+      this.validationErrorMsg = "Please add all mandatory fields";
+      this.validationerrorflag = true;
+    }
+    let element = <HTMLInputElement>document.getElementById("iDatesChkBx");
+    if (element.checked == true) {
+      if (new Date(this.addProjectForm.get("iStartDate").value).getTime() >= new Date(this.addProjectForm.get("iEndDate").value).getTime()) {
+        this.validationErrorMsg = "End Date should be greater than the start date";
+        this.validationerrorflag = true;
+      }
     }
   }
 

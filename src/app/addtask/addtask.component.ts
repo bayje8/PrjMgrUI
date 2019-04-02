@@ -34,6 +34,8 @@ export class AddtaskComponent implements OnInit {
   userFlag: boolean = false;
   parenttaskFlag: boolean = false;
   addParentTaskFlag: boolean = false;
+  validationerrorflag: boolean = false;
+  validationErrorMsg: string = "";
   constructor(private taskService: TaskserviceService, private route: ActivatedRoute, private router: Router) {
     this.initForm();
     this.getProjects();
@@ -74,6 +76,7 @@ export class AddtaskComponent implements OnInit {
       enddate: new FormControl(),
       user: new FormControl()
     });
+    this.addTaskForm.get("priority").setValue(15);
   }
 
   getProjects() {
@@ -98,12 +101,35 @@ export class AddtaskComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log("submitted!")
-    if (this.addParentTaskFlag) {
-      this.addParentTask();
-    } else {
-      this.addTask();
+    this.validate();
+    if (!this.validationerrorflag) {
+      console.log("submitted!")
+      if (this.addParentTaskFlag) {
+        this.addParentTask();
+      } else {
+        this.addTask();
+      }
     }
+  }
+
+  validate() {
+
+    let element = <HTMLInputElement>document.getElementById("iParentTaskChkBx");
+    if (element.checked == true) {
+      if (this.addTaskForm.get("task").value == "") {
+        this.validationErrorMsg = "Task can not be blank!!!";
+        this.validationerrorflag = true;
+      }
+    } else {
+      if (this.addTaskForm.get("task").value == "" ||
+        this.projectName == "" ||
+        this.parenttaskName == "" ||
+        this.userName == "") {
+        this.validationErrorMsg = "Please enter all mandatory fields!"
+        this.validationerrorflag = true;
+      }
+    }
+
   }
 
   addTask() {

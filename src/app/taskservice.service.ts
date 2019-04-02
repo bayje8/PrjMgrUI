@@ -8,7 +8,7 @@ import { project } from './project';
 import { parenttask } from './parenttask';
 
 
-const endpoint = 'http://localhost:8082/';
+const endpoint = 'http://localhost:8084/ProjectManager/';
 
 const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }) };
 
